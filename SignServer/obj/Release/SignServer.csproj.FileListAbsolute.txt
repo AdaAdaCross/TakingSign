@@ -1,0 +1,7 @@
+D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\bin\Release\SignServer.exe.config
+D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\bin\Release\SignServer.exe
+D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\bin\Release\SignServer.pdb
+D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\obj\Release\SignServer.csprojAssemblyReference.cache
+D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\obj\Release\SignServer.csproj.CoreCompileInputs.cache
+D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\obj\Release\SignServer.exe
+D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\obj\Release\SignServer.pdb
