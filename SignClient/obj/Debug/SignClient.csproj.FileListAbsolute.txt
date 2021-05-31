@@ -1,0 +1,9 @@
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\bin\Debug\SignClient.exe.config
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\bin\Debug\SignClient.exe
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\bin\Debug\SignClient.pdb
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\obj\Debug\SignClient.MainForm.resources
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\obj\Debug\SignClient.Properties.Resources.resources
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\obj\Debug\SignClient.csproj.GenerateResource.cache
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\obj\Debug\SignClient.csproj.CoreCompileInputs.cache
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\obj\Debug\SignClient.exe
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\obj\Debug\SignClient.pdb

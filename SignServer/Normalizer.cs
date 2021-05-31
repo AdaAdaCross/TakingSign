@@ -13,6 +13,29 @@ namespace SignServer
         private const int req_size = 64;
         private const float widht = 2;
 
+        public static void CreateImages(string csv_path, string png_path)
+        {
+            string[] dirs = Directory.GetDirectories(csv_path);
+            foreach (string dir in dirs)
+            {
+                string png_dir = dir.Replace(csv_path, png_path);
+                if (!Directory.Exists(png_dir))
+                {
+                    Directory.CreateDirectory(png_dir);
+                }
+
+                string[] files = Directory.GetFiles(dir, "*.csv");
+                foreach (string file in files)
+                {
+                    string png_file = file.Replace(csv_path, png_path);
+                    png_file = png_file.Replace(".csv", ".png");
+
+                    int[][] sign = Worker.ReadFromCSV(file);
+                    NormalizeSign(sign);
+                    DrawTo(sign, png_file);
+                }
+            }
+        }
         public static int[][] ReadFromCSV(string filename)
         {
             List<int[]> rows = new List<int[]>();
@@ -35,8 +58,7 @@ namespace SignServer
 
             return rows.ToArray();
         }
-
-        public static void NormalizeSign(int[][] signdata)
+        private static void NormalizeSign(int[][] signdata)
         {
             int maxX = signdata[0][0];
             int minX = signdata[0][0];
@@ -73,7 +95,7 @@ namespace SignServer
                 signdata[i][1] = (int)(signdata[i][1] * ScaleY);
             }
         }
-        public static void DrawTo(int[][] sign, string filename)
+        private static void DrawTo(int[][] sign, string filename)
         {
             Pen m_pen = new Pen(Color.Black);
             m_pen.Width = widht;

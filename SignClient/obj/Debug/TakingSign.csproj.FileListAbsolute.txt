@@ -18,12 +18,3 @@ D:\SCIENCE\Downloads\TakingSign\TakingSign\TakingSign\obj\Debug\TakingSign.cspro
 D:\SCIENCE\Downloads\TakingSign\TakingSign\TakingSign\obj\Debug\TakingSign.csproj.CoreCompileInputs.cache
 D:\SCIENCE\Downloads\TakingSign\TakingSign\TakingSign\obj\Debug\TakingSign.exe
 D:\SCIENCE\Downloads\TakingSign\TakingSign\TakingSign\obj\Debug\TakingSign.pdb
-D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\bin\Debug\TakingSign.exe.config
-D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\bin\Debug\TakingSign.exe
-D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\bin\Debug\TakingSign.pdb
-D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\obj\Debug\TakingSign.MainForm.resources
-D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\obj\Debug\TakingSign.Properties.Resources.resources
-D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\obj\Debug\TakingSign.csproj.GenerateResource.cache
-D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\obj\Debug\TakingSign.csproj.CoreCompileInputs.cache
-D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\obj\Debug\TakingSign.exe
-D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\obj\Debug\TakingSign.pdb

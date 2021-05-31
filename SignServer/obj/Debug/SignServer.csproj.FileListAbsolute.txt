@@ -5,3 +5,9 @@ D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\obj\Debug\SignServer.cspro
 D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\obj\Debug\SignServer.csproj.CoreCompileInputs.cache
 D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\obj\Debug\SignServer.exe
 D:\SCIENCE\Downloads\TakingSign\TakingSign\SignServer\obj\Debug\SignServer.pdb
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignServer\bin\Debug\SignServer.exe.config
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignServer\bin\Debug\SignServer.exe
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignServer\bin\Debug\SignServer.pdb
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignServer\obj\Debug\SignServer.csproj.CoreCompileInputs.cache
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignServer\obj\Debug\SignServer.exe
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignServer\obj\Debug\SignServer.pdb
