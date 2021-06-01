@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,15 +12,17 @@ namespace SignServer
 
         static void Main(string[] args)
         {
-            server = new Server(56565, "D:\\Soft_DSA\\Soft_DSA.cer");
+            string pathToPython = "C:\\Program Files\\Python38\\python.exe";
+            string pathToSkript = "D:\\Soft_DSA\\neural.py";
+            Neural.Init(pathToPython, pathToSkript);
 
-            string csv_path = "D:\\Soft_DSA\\csv";
-            string png_path = "D:\\Soft_DSA\\png";
+            server = new Server(56565, "D:\\Soft_DSA\\Soft_DSA.cer");
 
             Console.WriteLine("Press any key to stop server");
             Console.ReadKey();
 
             server.StopServer();
+            Neural.Close();
         }
     }
 }

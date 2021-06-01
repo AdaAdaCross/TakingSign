@@ -7,3 +7,4 @@ D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\Si
 D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\obj\Debug\SignClient.csproj.CoreCompileInputs.cache
 D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\obj\Debug\SignClient.exe
 D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\obj\Debug\SignClient.pdb
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignClient\obj\Debug\SignClient.csprojAssemblyReference.cache

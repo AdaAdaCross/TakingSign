@@ -11,3 +11,4 @@ D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\Si
 D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignServer\obj\Debug\SignServer.csproj.CoreCompileInputs.cache
 D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignServer\obj\Debug\SignServer.exe
 D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignServer\obj\Debug\SignServer.pdb
+D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\SignServer\obj\Debug\SignServer.csprojAssemblyReference.cache

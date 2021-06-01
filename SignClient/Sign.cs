@@ -60,6 +60,23 @@ namespace SignClient
             writer.Close();
         }
 
+        public string GetSignData()
+        {
+            string result = "";
+
+            foreach (Discret point in points)
+            {
+                int press = 0;
+                if (point.MousePressed)
+                    press = 1;
+                result += point.coordinate.X.ToString() + "," 
+                       +  point.coordinate.Y.ToString() + ","
+                       +  press.ToString() + " ";
+            }
+
+            return result;
+        }
+
         public void ReadFromFile(string fileName)
         {
             points.Clear();

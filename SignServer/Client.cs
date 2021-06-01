@@ -9,6 +9,7 @@ using System.Threading;
 using System.Text;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
 
@@ -20,6 +21,7 @@ namespace SignServer
 
         public SslStream sslStream;
         private string id = "0";
+        private string hash_id = "0";
         private Mutex mutex;
         private Thread clientThread;
         private Random rnd = new Random();
@@ -45,6 +47,7 @@ namespace SignServer
 
                 id = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString() + ":" +
                     ((IPEndPoint)client.Client.RemoteEndPoint).Port.ToString();
+                hash_id = Math.Abs(id.GetHashCode()).ToString();
 
                 alive = true;
 
@@ -68,7 +71,25 @@ namespace SignServer
                 if (data == null)
                     return;
 
-                Console.WriteLine(Encoding.Unicode.GetString(data));
+                byte code = 0;
+                string message = "";
+                ParseMessage(data, ref code, ref message);
+                
+                if (code == 1)
+                {
+                    string filename = "D:\\Soft_DSA\\" + hash_id + ".png";
+                    Console.WriteLine("User '" + id + "' send sign");
+                    int[][] sign = Worker.ReadFromString(message);
+                    Worker.NormalizeSign(sign);
+                    Worker.DrawTo(sign, filename);
+
+                    int result = Neural.Auth(filename);
+                    Console.WriteLine("User '" + id + "' received result: " + result);
+
+                    if (File.Exists(filename))
+                        File.Delete(filename);
+                    continue;
+                }
             }
         }
 
@@ -129,6 +150,12 @@ namespace SignServer
             full_message[2 + row_message.Length] = 0;
             Array.Copy(row_message, 0, full_message, 2, row_message.Length);
             return full_message;
+        }
+
+        private void ParseMessage(byte[] row, ref byte code, ref string message)
+        {
+            code = row[0];
+            message = Encoding.Unicode.GetString(row, 2, row.Length - 3);
         }
     }
 }

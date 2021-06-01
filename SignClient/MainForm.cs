@@ -129,7 +129,11 @@ namespace SignClient
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            sslStream.Close();
+            try
+            {
+                sslStream.Close();
+            }
+            catch (Exception exp) {}
         }
 
         private byte[] GetMessage()
@@ -191,7 +195,28 @@ namespace SignClient
 
         private void btGetCertificate_Click(object sender, EventArgs e)
         {
-            SendMessage(Encoding.Unicode.GetBytes("test message"));
+            if (!SignWasStarted)
+            {
+                timer1.Enabled = true;
+                Tip.Text = "Наносите подпись";
+                btGetCertificate.Text = "Остановить";
+            }
+            else
+            {
+                timer1.Enabled = false;
+                SignWasStarted = false;
+                userSign.EndSign();
+
+                string str_sign = userSign.GetSignData();
+                byte[] mess = GenerateMessage(1, str_sign);
+                SendMessage(mess);
+                //userSign.SaveToFile(filename);
+                //MessageBox.Show("Подпись сохранена");
+                userSign.ClearSign();
+                pictureBox1.Invalidate();
+                Tip.Text = "Выберите действие";
+                btGetCertificate.Text = "Получить сертификат";
+            }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
