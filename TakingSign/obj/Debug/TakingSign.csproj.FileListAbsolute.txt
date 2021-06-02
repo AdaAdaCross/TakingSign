@@ -27,4 +27,3 @@ D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\Ta
 D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\obj\Debug\TakingSign.csproj.CoreCompileInputs.cache
 D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\obj\Debug\TakingSign.exe
 D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\obj\Debug\TakingSign.pdb
-D:\FastAcсess\Данные\Лабы\8 семестр\Курсач\TakingSign\TakingSign\obj\Debug\TakingSign.csprojAssemblyReference.cache

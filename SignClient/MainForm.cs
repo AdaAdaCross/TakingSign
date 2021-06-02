@@ -11,6 +11,7 @@ using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
 
@@ -24,7 +25,7 @@ namespace SignClient
         bool mousePressed = false;
         Point currentPosition = new Point(0, 0);
         Sign userSign = new Sign();
-        int signNumber = 0;
+        int seed = -1;
 
         public bool CheckCert(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
@@ -193,6 +194,32 @@ namespace SignClient
             return full_message;
         }
 
+        private void ParseMessage(byte[] row, ref byte code, ref string message)
+        {
+            code = row[0];
+            message = Encoding.Unicode.GetString(row, 2, row.Length - 3);
+        }
+
+        private void GenerateSertificate()
+        {
+            RSAParameters rsa_params = new RSAParameters();
+            NumberGenerator gen = new NumberGenerator(seed);
+            rsa_params.P = gen.P.ToByteArray();
+            rsa_params.Q = gen.Q.ToByteArray();
+            rsa_params.Modulus = gen.N.ToByteArray();
+            rsa_params.Exponent = new byte[]{ 1, 0, 1};
+            //rsa_params.InverseQ = gen.InverseQ.ToByteArray();
+            //rsa_params.D = gen.D.ToByteArray();
+            //rsa_params.DP = gen.DP.ToByteArray();
+            //rsa_params.DQ = gen.DQ.ToByteArray();
+            var rsaKey = RSA.Create(rsa_params);
+            RSAParameters rsa_test = rsaKey.ExportParameters(true);
+
+            string subject = "CN=TakingSign";
+            var certReq = new CertificateRequest(subject, rsaKey, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+        }
+
         private void btGetCertificate_Click(object sender, EventArgs e)
         {
             if (!SignWasStarted)
@@ -210,8 +237,16 @@ namespace SignClient
                 string str_sign = userSign.GetSignData();
                 byte[] mess = GenerateMessage(1, str_sign);
                 SendMessage(mess);
-                //userSign.SaveToFile(filename);
-                //MessageBox.Show("Подпись сохранена");
+                byte[] answer = GetMessage();
+                byte code = 255;
+                string message = "";
+                ParseMessage(answer, ref code, ref message);
+                if (code == 200)
+                {
+                    seed = Convert.ToInt32(message);
+                    MessageBox.Show("Seed received");
+                    GenerateSertificate();
+                }
                 userSign.ClearSign();
                 pictureBox1.Invalidate();
                 Tip.Text = "Выберите действие";

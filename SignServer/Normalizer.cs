@@ -155,8 +155,8 @@ namespace SignServer
 
             p = new Process();
             ProcessStartInfo info = new ProcessStartInfo(pathToPython, pathToSkript);
-            //info.UseShellExecute = false;
-            //info.CreateNoWindow = true;
+            info.UseShellExecute = false;
+            info.CreateNoWindow = true;
             p.StartInfo = info;
             p.Start();
 

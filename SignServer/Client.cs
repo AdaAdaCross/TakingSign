@@ -86,6 +86,9 @@ namespace SignServer
                     int result = Neural.Auth(filename);
                     Console.WriteLine("User '" + id + "' received result: " + result);
 
+                    byte[] answer = GenerateMessage(200, result.ToString());
+                    SendMessage(answer);
+
                     if (File.Exists(filename))
                         File.Delete(filename);
                     continue;
