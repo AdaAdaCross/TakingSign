@@ -7,72 +7,101 @@ using System.Threading;
 
 namespace SignClient
 {
+    public class CertParams
+    {
+        public bool hasParams;
+        public string savePath;
+        public string subject;
+        public DateTimeOffset endDate;
+        public bool exportSecret;
+
+        public CertParams()
+        {
+            hasParams = false;
+        }
+
+        public CertParams(
+            string _savePath,
+            string _subject,
+            DateTime _endDate,
+            bool _exportSecret)
+        {
+            hasParams = true;
+            savePath = _savePath;
+            subject = _subject;
+            endDate = _endDate;
+            exportSecret = _exportSecret;
+        }
+    }
+
+
     class NumberGenerator
     {
         private BigInteger p, g, e, iq, d;
         private Random rnd;
+        int keysize = 128;
 
-        public BigInteger P
+        public byte[] P
         {
             get
             {
-                return p;
+                return CopyAndReverse(p.ToByteArray(), keysize);
             }
         }
 
-        public BigInteger Q
+        public byte[] Q
         {
             get
             {
-                return g;
+                return CopyAndReverse(g.ToByteArray(), keysize);
             }
         }
 
-        public BigInteger N
+        public byte[] N
         {
             get
             {
-                return p * g;
+                return CopyAndReverse((p * g).ToByteArray(), keysize * 2);
             }
         }
 
-        public BigInteger E
+        public byte[] E
         {
             get
             {
-                return e;
+                return e.ToByteArray();
             }
         }
 
-        public BigInteger InverseQ
+        public byte[] InverseQ
         {
             get
             {
-                return iq;
+                return CopyAndReverse(iq.ToByteArray(), keysize);
             }
         }
 
-        public BigInteger D
+        public byte[] D
         {
             get
             {
-                return d;
+                return CopyAndReverse(d.ToByteArray(), keysize * 2);
             }
         }
 
-        public BigInteger DP
+        public byte[] DP
         {
             get
             {
-                return d % (p - 1);
+                return CopyAndReverse((d % (p - 1)).ToByteArray(), keysize);
             }
         }
 
-        public BigInteger DQ
+        public byte[] DQ
         {
             get
             {
-                return d % (g - 1);
+                return CopyAndReverse((d % (g - 1)).ToByteArray(), keysize);
             }
         }
 
@@ -85,12 +114,13 @@ namespace SignClient
 
         public void InitNums()
         {
-            int keysize = 64;
             p = GenSimple(keysize);
             g = GenSimple(keysize);
             e = new BigInteger(new byte[] { 1, 0, 1 });
             iq = FindInvers(g, p);
             d = FindInvers(e, (p - 1) * (g - 1));
+
+            BigInteger check = (d * e) % ((p - 1) * (g - 1));
         }
 
         private bool IsSimple(BigInteger x)
@@ -182,6 +212,15 @@ namespace SignClient
 
             size = Num.ToByteArray().Length;
             return Num;
+        }
+
+        private byte[] CopyAndReverse(byte[] data, int len)
+        {
+            byte[] reversed = new byte[len];
+            Array.Fill<byte>(reversed, 0);
+            Array.Copy(data, 0, reversed, 0, data.Length);
+            Array.Reverse(reversed);
+            return reversed;
         }
     }
 }

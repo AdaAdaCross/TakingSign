@@ -35,6 +35,11 @@ namespace SignClient
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.btGetCertificate = new System.Windows.Forms.Button();
             this.Tip = new System.Windows.Forms.Label();
+            this.SaveCert = new System.Windows.Forms.Button();
+            this.SignFile = new System.Windows.Forms.Button();
+            this.CheckSignFile = new System.Windows.Forms.Button();
+            this.DecryptFile = new System.Windows.Forms.Button();
+            this.EncryptFile = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -42,9 +47,10 @@ namespace SignClient
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(14, 14);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(997, 500);
+            this.pictureBox1.Size = new System.Drawing.Size(1000, 500);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -64,10 +70,11 @@ namespace SignClient
             // 
             // btGetCertificate
             // 
-            this.btGetCertificate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btGetCertificate.Location = new System.Drawing.Point(12, 559);
+            this.btGetCertificate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btGetCertificate.Location = new System.Drawing.Point(14, 550);
+            this.btGetCertificate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btGetCertificate.Name = "btGetCertificate";
-            this.btGetCertificate.Size = new System.Drawing.Size(217, 40);
+            this.btGetCertificate.Size = new System.Drawing.Size(208, 46);
             this.btGetCertificate.TabIndex = 1;
             this.btGetCertificate.Text = "Получить сертификат";
             this.btGetCertificate.UseVisualStyleBackColor = true;
@@ -76,25 +83,95 @@ namespace SignClient
             // Tip
             // 
             this.Tip.AutoSize = true;
-            this.Tip.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Tip.Location = new System.Drawing.Point(8, 515);
+            this.Tip.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Tip.Location = new System.Drawing.Point(14, 517);
+            this.Tip.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Tip.Name = "Tip";
             this.Tip.Size = new System.Drawing.Size(179, 20);
             this.Tip.TabIndex = 2;
             this.Tip.Text = "Выберите действие";
             // 
+            // SaveCert
+            // 
+            this.SaveCert.Enabled = false;
+            this.SaveCert.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.SaveCert.Location = new System.Drawing.Point(230, 550);
+            this.SaveCert.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.SaveCert.Name = "SaveCert";
+            this.SaveCert.Size = new System.Drawing.Size(216, 46);
+            this.SaveCert.TabIndex = 3;
+            this.SaveCert.Text = "Сохранить сертификат";
+            this.SaveCert.UseVisualStyleBackColor = true;
+            this.SaveCert.Click += new System.EventHandler(this.SaveCert_Click);
+            // 
+            // SignFile
+            // 
+            this.SignFile.Enabled = false;
+            this.SignFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.SignFile.Location = new System.Drawing.Point(568, 520);
+            this.SignFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.SignFile.Name = "SignFile";
+            this.SignFile.Size = new System.Drawing.Size(216, 32);
+            this.SignFile.TabIndex = 4;
+            this.SignFile.Text = "Подписать файл";
+            this.SignFile.UseVisualStyleBackColor = true;
+            this.SignFile.Click += new System.EventHandler(this.SignFile_Click);
+            // 
+            // CheckSignFile
+            // 
+            this.CheckSignFile.Enabled = false;
+            this.CheckSignFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.CheckSignFile.Location = new System.Drawing.Point(568, 561);
+            this.CheckSignFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.CheckSignFile.Name = "CheckSignFile";
+            this.CheckSignFile.Size = new System.Drawing.Size(216, 32);
+            this.CheckSignFile.TabIndex = 5;
+            this.CheckSignFile.Text = "Проверить подпись";
+            this.CheckSignFile.UseVisualStyleBackColor = true;
+            this.CheckSignFile.Click += new System.EventHandler(this.CheckSignFile_Click);
+            // 
+            // DecryptFile
+            // 
+            this.DecryptFile.Enabled = false;
+            this.DecryptFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.DecryptFile.Location = new System.Drawing.Point(792, 561);
+            this.DecryptFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.DecryptFile.Name = "DecryptFile";
+            this.DecryptFile.Size = new System.Drawing.Size(216, 32);
+            this.DecryptFile.TabIndex = 7;
+            this.DecryptFile.Text = "Расшифровать файл";
+            this.DecryptFile.UseVisualStyleBackColor = true;
+            // 
+            // EncryptFile
+            // 
+            this.EncryptFile.Enabled = false;
+            this.EncryptFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.EncryptFile.Location = new System.Drawing.Point(792, 520);
+            this.EncryptFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.EncryptFile.Name = "EncryptFile";
+            this.EncryptFile.Size = new System.Drawing.Size(216, 32);
+            this.EncryptFile.TabIndex = 6;
+            this.EncryptFile.Text = "Зашифровать файл";
+            this.EncryptFile.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1021, 611);
+            this.ClientSize = new System.Drawing.Size(1021, 605);
+            this.Controls.Add(this.DecryptFile);
+            this.Controls.Add(this.EncryptFile);
+            this.Controls.Add(this.CheckSignFile);
+            this.Controls.Add(this.SignFile);
+            this.Controls.Add(this.SaveCert);
             this.Controls.Add(this.Tip);
             this.Controls.Add(this.btGetCertificate);
             this.Controls.Add(this.pictureBox1);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1037, 650);
+            this.MaximumSize = new System.Drawing.Size(1037, 644);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(1037, 650);
+            this.MinimumSize = new System.Drawing.Size(1037, 644);
             this.Name = "MainForm";
             this.Text = "MainForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -111,5 +188,10 @@ namespace SignClient
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Button btGetCertificate;
         private System.Windows.Forms.Label Tip;
+        private System.Windows.Forms.Button SaveCert;
+        private System.Windows.Forms.Button SignFile;
+        private System.Windows.Forms.Button CheckSignFile;
+        private System.Windows.Forms.Button DecryptFile;
+        private System.Windows.Forms.Button EncryptFile;
     }
 }

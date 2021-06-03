@@ -19,6 +19,8 @@ namespace SignClient
 {
     public partial class MainForm : Form
     {
+        public CertParams certParams = new CertParams();
+
         private TcpClient client;
         public SslStream sslStream;
         bool SignWasStarted = false;
@@ -26,6 +28,7 @@ namespace SignClient
         Point currentPosition = new Point(0, 0);
         Sign userSign = new Sign();
         int seed = -1;
+        RSA rsaKey;
 
         public bool CheckCert(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
@@ -42,7 +45,6 @@ namespace SignClient
 
             return true;
         }
-
 
         public MainForm()
         {
@@ -200,24 +202,67 @@ namespace SignClient
             message = Encoding.Unicode.GetString(row, 2, row.Length - 3);
         }
 
-        private void GenerateSertificate()
+        private void GenerateKey()
         {
+            if (seed == -1)
+                return;
+
             RSAParameters rsa_params = new RSAParameters();
             NumberGenerator gen = new NumberGenerator(seed);
-            rsa_params.P = gen.P.ToByteArray();
-            rsa_params.Q = gen.Q.ToByteArray();
-            rsa_params.Modulus = gen.N.ToByteArray();
-            rsa_params.Exponent = new byte[]{ 1, 0, 1};
-            //rsa_params.InverseQ = gen.InverseQ.ToByteArray();
-            //rsa_params.D = gen.D.ToByteArray();
-            //rsa_params.DP = gen.DP.ToByteArray();
-            //rsa_params.DQ = gen.DQ.ToByteArray();
-            var rsaKey = RSA.Create(rsa_params);
-            RSAParameters rsa_test = rsaKey.ExportParameters(true);
+            rsa_params.P = gen.P;
+            rsa_params.Q = gen.Q;
+            rsa_params.Modulus = gen.N;
+            rsa_params.Exponent = new byte[] { 1, 0, 1 };
+            rsa_params.InverseQ = gen.InverseQ;
+            rsa_params.D = gen.D;
+            rsa_params.DP = gen.DP;
+            rsa_params.DQ = gen.DQ;
+            rsaKey = RSA.Create(rsa_params);
+        }
 
-            string subject = "CN=TakingSign";
+        private void GenerateSertificate()
+        {
+            if (rsaKey == null)
+                return;
+
+            if (!certParams.hasParams)
+                return;
+
+            string subject = "CN=" + certParams.subject;
             var certReq = new CertificateRequest(subject, rsaKey, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            certReq.CertificateExtensions.Add(new X509BasicConstraintsExtension(false, false, 0, false));
+            certReq.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.NonRepudiation, false));
+            certReq.CertificateExtensions.Add(new X509SubjectKeyIdentifierExtension(certReq.PublicKey, false));
+            byte[] serialNumber = BitConverter.GetBytes(DateTime.Now.ToBinary());
+            var certificate = certReq.CreateSelfSigned(
+                DateTimeOffset.Now, 
+                certParams.endDate);
 
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("-----BEGIN CERTIFICATE-----");
+            builder.AppendLine(Convert.ToBase64String(certificate.RawData, Base64FormattingOptions.InsertLineBreaks));
+            builder.AppendLine("-----END CERTIFICATE-----");
+            File.WriteAllText(certParams.savePath + "\\" + certParams.subject + ".crt",
+                builder.ToString());
+
+            if (certParams.exportSecret)
+            {
+                string sign_name = rsaKey.SignatureAlgorithm.ToUpper();
+                builder = new StringBuilder();
+                builder.AppendLine($"-----BEGIN {sign_name} PRIVATE KEY-----");
+                builder.AppendLine(Convert.ToBase64String(rsaKey.ExportRSAPrivateKey(), Base64FormattingOptions.InsertLineBreaks));
+                builder.AppendLine($"-----END {sign_name} PRIVATE KEY-----");
+                File.WriteAllText(certParams.savePath + "\\" + certParams.subject + ".key", builder.ToString());
+            }
+
+            MessageBox.Show("Сертификат сохранен!", 
+                "Успешно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void GetParams()
+        {
+            CertSettings certsets = new CertSettings();
+            certsets.ShowDialog(this);
         }
 
         private void btGetCertificate_Click(object sender, EventArgs e)
@@ -244,8 +289,12 @@ namespace SignClient
                 if (code == 200)
                 {
                     seed = Convert.ToInt32(message);
-                    MessageBox.Show("Seed received");
-                    GenerateSertificate();
+                    GenerateKey();
+                    SaveCert.Enabled = true;
+                    SignFile.Enabled = true;
+                    CheckSignFile.Enabled = true;
+                    EncryptFile.Enabled = true;
+                    DecryptFile.Enabled = true;
                 }
                 userSign.ClearSign();
                 pictureBox1.Invalidate();
@@ -257,6 +306,93 @@ namespace SignClient
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void SaveCert_Click(object sender, EventArgs e)
+        {
+            GetParams();
+            GenerateSertificate();
+        }
+
+        private void SignFile_Click(object sender, EventArgs e)
+        {
+            if (rsaKey == null)
+                return;
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Выберите файл для подписи";
+            openFileDialog.Filter = "All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Выберите место сохранения подписи";
+            saveFileDialog.Filter = "Signature files (*.sign)|*.sign";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            string filePath = openFileDialog.FileName;
+            BinaryReader reader = new BinaryReader(File.OpenRead(filePath));
+            FileInfo info = new FileInfo(filePath);
+            byte[] data = reader.ReadBytes((int)info.Length);
+            reader.Close();
+            byte[] sign_data = rsaKey.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            BinaryWriter writer = new BinaryWriter(File.OpenWrite(saveFileDialog.FileName));
+            writer.Write(sign_data);
+            writer.Flush();
+            writer.Close();
+            MessageBox.Show("Подпись сохранена!",
+                "Успешно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void CheckSignFile_Click(object sender, EventArgs e)
+        {
+            if (rsaKey == null)
+                return;
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Выберите файл подписи для проверки";
+            openFileDialog.Filter = "All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            string filePath = openFileDialog.FileName;
+            BinaryReader reader = new BinaryReader(File.OpenRead(filePath));
+            FileInfo info = new FileInfo(filePath);
+            byte[] sign_data = reader.ReadBytes((int)info.Length);
+            reader.Close();
+
+            openFileDialog.Title = "Выберите подписанный файл подписи для проверки хэша";
+            openFileDialog.Filter = "All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            filePath = openFileDialog.FileName;
+            reader = new BinaryReader(File.OpenRead(filePath));
+            info = new FileInfo(filePath);
+            byte[] data = reader.ReadBytes((int)info.Length);
+            reader.Close();
+
+            bool result = rsaKey.VerifyData(data, sign_data,
+                HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+            if (result)
+                MessageBox.Show("Подпись действительна!",
+                "Успешно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
+                MessageBox.Show("Подпись не соответствует представленным данным!",
+                "Провал!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
