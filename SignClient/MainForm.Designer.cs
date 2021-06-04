@@ -141,6 +141,7 @@ namespace SignClient
             this.DecryptFile.TabIndex = 7;
             this.DecryptFile.Text = "Расшифровать файл";
             this.DecryptFile.UseVisualStyleBackColor = true;
+            this.DecryptFile.Click += new System.EventHandler(this.DecryptFile_Click);
             // 
             // EncryptFile
             // 
@@ -153,6 +154,7 @@ namespace SignClient
             this.EncryptFile.TabIndex = 6;
             this.EncryptFile.Text = "Зашифровать файл";
             this.EncryptFile.UseVisualStyleBackColor = true;
+            this.EncryptFile.Click += new System.EventHandler(this.EncryptFile_Click);
             // 
             // MainForm
             // 

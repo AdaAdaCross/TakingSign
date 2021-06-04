@@ -61,7 +61,8 @@ namespace SignClient
         {
             get
             {
-                return CopyAndReverse((p * g).ToByteArray(), keysize * 2);
+                BigInteger n = p * g;
+                return CopyAndReverse((n).ToByteArray(), keysize * 2);
             }
         }
 

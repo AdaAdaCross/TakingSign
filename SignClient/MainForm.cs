@@ -13,7 +13,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-
+using System.Numerics;
 
 namespace SignClient
 {
@@ -357,7 +357,7 @@ namespace SignClient
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Title = "Выберите файл подписи для проверки";
-            openFileDialog.Filter = "All files (*.*)|*.*";
+            openFileDialog.Filter = "Signature files (*.sign)|*.sign|All files (*.*)|*.*";
             openFileDialog.FilterIndex = 1;
             openFileDialog.RestoreDirectory = true;
 
@@ -393,6 +393,135 @@ namespace SignClient
             else
                 MessageBox.Show("Подпись не соответствует представленным данным!",
                 "Провал!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void EncryptFile_Click(object sender, EventArgs e)
+        {
+            if (rsaKey == null)
+                return;
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Выберите файл для зашифровывания";
+            openFileDialog.Filter = "All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Выберите место сохранения зашифрованного файла";
+            saveFileDialog.Filter = "Encrypted files (*.rsa)|*.rsa";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            string filePath = openFileDialog.FileName;
+            BinaryReader reader = new BinaryReader(File.OpenRead(filePath));
+            FileInfo info = new FileInfo(filePath);
+            byte[] data = reader.ReadBytes((int)info.Length);
+            reader.Close();
+
+            BinaryWriter writer = new BinaryWriter(File.OpenWrite(saveFileDialog.FileName));
+            RSAParameters rsaparams = rsaKey.ExportParameters(true);
+            int offset = 0;
+            int data_size = data.Length;
+            int block_size = 128;// rsaparams.Modulus.Length - 1;
+
+            while (offset < data_size)
+            {
+                byte[] data256;
+                if (data_size - offset >= block_size)
+                {
+                    data256 = new byte[block_size];
+                    Array.Copy(data, offset, data256, 0, block_size);
+                }
+                else
+                {
+                    data256 = new byte[data_size - offset];
+                    Array.Copy(data, offset, data256, 0, data_size - offset);
+                }
+                byte[] encr_data = rsaKey.Encrypt(data256, RSAEncryptionPadding.Pkcs1);
+                byte[] resersed = new byte[256];
+                Array.Fill<byte>(resersed, 0);
+                Array.Copy(encr_data, 0, resersed, 0, encr_data.Length);
+                writer.Write(resersed);
+                writer.Flush();
+                
+                offset += block_size;
+            }
+            writer.Close();
+
+            MessageBox.Show("Файл зашифрован!",
+                "Успешно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void DecryptFile_Click(object sender, EventArgs e)
+        {
+            if (rsaKey == null)
+                return;
+
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Title = "Выберите файл для расшифровывания";
+                openFileDialog.Filter = "Encrypted files (*.rsa)|*.rsa|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Title = "Выберите место сохранения расшифрованного файла";
+                saveFileDialog.Filter = "All files (*.*)|*.*";
+                saveFileDialog.FilterIndex = 1;
+                saveFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() != DialogResult.OK)
+                    return;
+                if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                string filePath = openFileDialog.FileName;
+                BinaryReader reader = new BinaryReader(File.OpenRead(filePath));
+                FileInfo info = new FileInfo(filePath);
+                byte[] encr_data = reader.ReadBytes((int)info.Length);
+                reader.Close();
+
+                RSAParameters rsaparams = rsaKey.ExportParameters(true);
+                int offset = 0;
+                int data_size = encr_data.Length;
+                int block_size = 256;
+
+                BinaryWriter writer = new BinaryWriter(File.OpenWrite(saveFileDialog.FileName));
+                while (offset < data_size)
+                {
+                    byte[] data256;
+                    if (data_size - offset >= block_size)
+                    {
+                        data256 = new byte[block_size];
+                        Array.Copy(encr_data, offset, data256, 0, block_size);
+                    }
+                    else
+                    {
+                        data256 = new byte[data_size - offset];
+                        Array.Copy(encr_data, offset, data256, 0, data_size - offset);
+                    }
+                    byte[] data = rsaKey.Decrypt(data256, RSAEncryptionPadding.Pkcs1);
+                    writer.Write(data);
+                    writer.Flush();
+
+                    offset += block_size;
+                }
+                writer.Close();
+
+                MessageBox.Show("Файл расшифрован!",
+                    "Успешно!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch(Exception exp)
+            {
+                MessageBox.Show("Не удалось расшифровать файл: " + exp.Message,
+                    "Провал!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
