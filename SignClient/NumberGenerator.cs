@@ -210,8 +210,20 @@ namespace SignClient
                 t *= 2;
             }
 
+            byte[] check = Num.ToByteArray();
+            if (size > check.Length || check[check.Length - 1] == 0)
+            {
+                byte[] tmp = new byte[size];
+                Array.Copy(Num.ToByteArray(), tmp, Num.ToByteArray().Length);
+                tmp[size - 1] = 1;
+                BigInteger N = new BigInteger(tmp);
+                while (!IsSimple(N))
+                {
+                    N += 2;
+                }
+                Num = N;
+            }
 
-            size = Num.ToByteArray().Length;
             return Num;
         }
 

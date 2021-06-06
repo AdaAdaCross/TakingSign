@@ -90,6 +90,7 @@ namespace SignClient
             this.Tip.Size = new System.Drawing.Size(179, 20);
             this.Tip.TabIndex = 2;
             this.Tip.Text = "Выберите действие";
+            this.Tip.Click += new System.EventHandler(this.Tip_Click);
             // 
             // SaveCert
             // 

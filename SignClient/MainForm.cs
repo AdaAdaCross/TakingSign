@@ -228,6 +228,8 @@ namespace SignClient
             if (!certParams.hasParams)
                 return;
 
+            RSAParameters pr = rsaKey.ExportParameters(true);
+
             string subject = "CN=" + certParams.subject;
             var certReq = new CertificateRequest(subject, rsaKey, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
             certReq.CertificateExtensions.Add(new X509BasicConstraintsExtension(false, false, 0, false));
@@ -522,6 +524,11 @@ namespace SignClient
                 MessageBox.Show("Не удалось расшифровать файл: " + exp.Message,
                     "Провал!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void Tip_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
